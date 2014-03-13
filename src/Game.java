@@ -321,7 +321,8 @@ public class Game {
         } else if ( command.equalsIgnoreCase("map")  || command.equalsIgnoreCase("m")){
         	printMap();
         }else{
-        	System.out.println("Please enter a valid command. ");
+        	System.out.println("Please enter a valid command as listed: ");
+        	help();
         };
 
         if (dir > -1) {   // This means a dir was set.
