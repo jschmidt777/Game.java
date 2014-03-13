@@ -26,10 +26,7 @@ public class Game {
     public static void main(String[] args) {
     	Inventory = new Items[4];
         storeMap = new Items[1];
-  		
-       
-	        
-	        
+  		  
         if (DEBUGGING) {
             // Display the command line args.
             System.out.println("Starting with args:");
@@ -114,7 +111,8 @@ public class Game {
 	private static void init() {
         // Initialize any uninitialized globals.
         command = new String();
-        stillPlaying = true;   
+        stillPlaying = true; 
+        System.out.println("Solar Sysdoom V3 (Java Edition)");  
         
         Items item0 = new Items(0);
 	  		item0.setName(" Piece One.");
