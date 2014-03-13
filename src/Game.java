@@ -108,22 +108,8 @@ public class Game {
   
  }  
  */
-/* 
- @Override
- public String toString() {
-     StringBuilder sb = new StringBuilder();
-     sb.append("[ListMan: name=" + this.name + " desc=" + this.desc + "] List Items:\n");
-     ListItem currentItem = this.head;
-     while (currentItem != null) {
-         sb.append(currentItem.toString());
-         sb.append("\n");
-         currentItem = currentItem.getNext();
-     }
-     return sb.toString();
- }
- */
 
-    //return StringBuilder.append
+ 
 
 	private static void init() {
         // Initialize any uninitialized globals.
