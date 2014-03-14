@@ -380,7 +380,7 @@ public class Game {
 				
 			System.out.println(storeMap[i]);
 			
-			}else if (Inventory[i] == null) {
+			}else if (storeMap[i] == null) {
 			
 			System.out.println("You do not have the map.");
 				
