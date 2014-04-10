@@ -37,9 +37,7 @@ public class ListItem {
 
 	    @Override
 	    public String toString() {
-	        return "[ListItem name=" + this.name
-	                + " desc=" + this.desc
-	                + " cost=" + this.cost + "]";
+	        return " name=" + this.name;
 	    }
 
 	    //

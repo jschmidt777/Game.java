@@ -22,11 +22,12 @@ public class Game {
     public static Items[] ItemsArr;				//An array of type Items to hold the possible items.
     public static Items[] Inventory;            //An array of type Items to hold the player's items.
     public static Items[] storeMap;             // Stores the player's map.
-   
+    public static String[] MagickItems;		// Stores the player's magick items. Will be printed out with the inventory.
     
     public static void main(String[] args) {
-    	Inventory = new Items[4];
+    	Inventory = new Items[5];
         storeMap = new Items[1];
+        MagickItems = new String[1];
   		  
         if (DEBUGGING) {
             // Display the command line args.
@@ -35,21 +36,7 @@ public class Game {
                 System.out.println(i + ":" + args[i]);
             }
         }
-        
-    //All of the following code is from the in-class code from ListTester.    
-     
-        
-        // Make the list manager.
        
-        // Declare an array for the items.
-       
-
-        
-        
-    
-
-
-        // Set starting locale, if it was provided as a command line parameter.
         /*
         if (args.length > 0) {
             try {
@@ -75,11 +62,24 @@ public class Game {
 
         // Game Loop
         while (stillPlaying) {
-            getCommand();
-            navigate();
-            updateDisplay();
-           
+        	
+        	if(currentLocale != locations[8]){
+        	
+        		getCommand();
+	            navigate();
+	            updateDisplay();
+        	}else{
+        		
+        		magickShoppe();
+        		getCommand();
+	            navigate();
+	            updateDisplay();
+        		
+        	}
         }
+        		 
+        	
+       
 
         // We're done. Thank the player and exit.
         System.out.println("Thank you for playing.");
@@ -124,7 +124,7 @@ public class Game {
  */
 
  
- // Make the list manager.
+   // Make the list manager.
     static ListMan lm1 = new ListMan();
    // lm1.setName("Magic Items");
    // lm1.setDesc("These are some of my favorite things.");
@@ -224,8 +224,11 @@ public class Game {
             int indexOfTarget = pass;
             int indexOfSmallest = indexOfTarget;
             for (int j = indexOfTarget+1; j < items.length; j++) {
+            	//The problem is here. Something with this if statement makes the game crash.
                 if (items[j].getName().compareToIgnoreCase(items[indexOfSmallest].getName()) < 0) {
                     indexOfSmallest = j;
+                }else{
+                	
                 }
             }
             ListItem temp = items[indexOfTarget];
@@ -261,8 +264,8 @@ public class Game {
 	  		item3.setDesc(" This is the fourth piece of the device."); 
   		
 	  	Items item4 = new Items(4);
-  			item4.setName("\n"+ "Turbo boosters" + "\n" + "Lasers" + "\n" + "SpaceShip Upgrade" + "\n" );
-  			item4.setDesc("These will help you with your journey."); 
+  			item4.setName("");
+  			item4.setDesc(" These can help you with your journey."); 
   		
   	        
   		Items item5 = new Items(5);
@@ -294,18 +297,22 @@ public class Game {
                     "                     |                                                                " + "\n"+
                     "                     V                                                                " + "\n"+
                     "                    Uranus "    );
+  			
+  			
   		
-   ItemsArr = new Items[6];
+  			 
+  			
+   ItemsArr = new Items[7];
    			ItemsArr[0]= item0;
    			ItemsArr[1]= item1;
    			ItemsArr[2]= item2;
    			ItemsArr[3]= item3;
    			ItemsArr[4]= item4;
    			ItemsArr[5]= item5;
-
+   			
         // Set up the location instances of the Locale class.
    			
-   		    //Attributes for loc0 
+   		    //Attributes for loc0. Instantiated as a global variable. 
 	        loc0.setName("Earth");
 	        loc0.setDesc("You are on the surface of your home planet.");
 	        loc0.setItem(item5);
@@ -364,8 +371,9 @@ public class Game {
 	        loc7.setNearestPlanet("Jupiter(north).");
 	       
 	    Space loc8 = new Space(8);   //Locale (8)
+	    
 	        loc8.setName("Magick Shoppe");
-	        loc8.setDesc("These are the magic items." ); 
+	        loc8.setDesc("This is where you can buy magick items." ); 
 	        loc8.setItem(item4);
 	        loc8.setNearestPlanet("Saturn(south).");
 	       
@@ -426,28 +434,14 @@ public class Game {
             }
         }
        
-        // Set up the navigation matrix.
-        /*
-        nav = new int[][] {
-                                 /* N   S   E   W */
-                                 /* 0   1   2   3 */
-        /*
-        		                   { 1, -1, -1, -1 }, // Earth    
-        		                   { 2, 0,-1, -1 },    //Mercury
-        		                   { -1, 1, 3, 4},    //Mars                     
-        		                   { 8, -1, -1, 2}, // Saturn   
-        		                   { 5, 6, 2, -1},    //Venus
-        		                   { -1, 4, -1, -1},  //Neptune
-        		                   { 4, 7, -1, -1},   //Jupiter
-        		                   { 6, -1, -1, -1},  //Uranus  
-        		                   {-1, 3, -1, -1 }  //Magick Shoppe
-        };
-
-       */
+        
        
         
     }
-    
+		
+	 //Instantiate the list item from the list of Magick Items.
+	 static ListItem li = new ListItem();
+	
 	 public static void magickShoppe(){
 		    
 		    readMagicItemsFromFileToList(fileName, lm1);
@@ -466,39 +460,43 @@ public class Game {
 		        }
 		    }
 				*/
-		    selectionSort(items);
+		    
+		    
 		   
+		    
 		    System.out.println("These are the Magic Items:");
 		    for (int i = 0; i < items.length; i++) {
 		        if (items[i] != null) {
 		            System.out.println(items[i].toString());
 		        }
 		    }
-			
+		    
+		   
 		    // Ask player for an item.
 		    Scanner inputReader = new Scanner(System.in);
 		    System.out.print("Welcome to the Magick Shoppe. What item would you like? ");
 		    String targetItem = new String();
 		    targetItem = inputReader.nextLine();
 		    System.out.println();
-		    
-		    //Add in more to meet the requiements of the project
-		    //Add a check to see if the player can buy the item (score is the cost)
 
-		    ListItem li = new ListItem();
+		   
 		    li = sequentialSearch(lm1, targetItem);
 		    if (li != null) {
 		        System.out.println(li.toString());
+		        System.out.print("That item is listed, buy with your score for " + li.getCost() + "? (or, go south back to Saturn )");
+		       
 		    }else {
-		     System.out.print("That item is not listed, search again? (or go south back to Saturn ");
+		     System.out.print("That item is not listed. Please search again using the look command or go south to Saturn.");
+		     
 		    }
-		 
-
+		   
 	 }	
+	 
+	 
 
     private static void updateDisplay() {
         System.out.println(currentLocale.getText());
-        //this will just have to be changed to currentLocale
+       
     }
 
     private static void getCommand() {
@@ -507,16 +505,13 @@ public class Game {
         Scanner inputReader = new Scanner(System.in);
         command = inputReader.nextLine();  // command is global.
        
-       //Start with one move since you started the game. Also, I don't know how to make it bypass the divide by zero error.
-       
         }
     
     
     
 
     private static void navigate() {
-      //  final int INVALID = -1;
-        //int dir = INVALID;  // This will get set to a value > 0 if a direction command was entered.
+     
     	
     	if (        command.equalsIgnoreCase("north") || command.equalsIgnoreCase("n") ) {
             //dir = 0;
@@ -542,6 +537,10 @@ public class Game {
         	printInventory();
         } else if ( command.equalsIgnoreCase("map")  || command.equalsIgnoreCase("m")){
         	printMap();
+        } else if ( command.equalsIgnoreCase("buy")  || command.equalsIgnoreCase("b") && currentLocale == locations[8]){
+        	buyItem();
+        } else if ( command.equalsIgnoreCase("look")  || command.equalsIgnoreCase("l") && currentLocale == locations[8]){
+        	lookForItem();
         }else{
         	System.out.println("Please enter a valid command as listed: ");
         	help();
@@ -560,20 +559,38 @@ public class Game {
             }
     }
     
-          
+          //TODO: Add the final touches for project threeeeeeeeee
+    	   
+    	   public static void lookForItem(){
+    		   //Doesn't need to do anything, it will re-search when they enter this command.
+    		   //May need to fix this
+    	   }
+    	   
+     public static void buyItem( ){
+    	//if(MagickItems.length == 0){
+    		if(score >= li.getCost()){
+    			MagickItems[0] = li.getName();
+    			System.out.println("You bought a(n): " + li.getName() + ".");
+    			goSouth(currentLocale);
+    		}else{
+    			System.out.println("You cannot buy this. Please search again using the look command or go south to Saturn. ");
+    		}
+    		
+    	//}else {
+    	//	   System.out.println("You can only have one magick item. ");
+    		   
+    	   }
+     
+    
            private static void goNorth(Locale loc, Locale locMS){
         	   
         	   if(loc.getNorth() != null){
         		   currentLocale = loc.getNorth();
         		   
         	   }else {
-        		   System.out.println("You cannot got that way.");
+        		   System.out.println("You cannot got that way. ");
         	   }
-        	   if(currentLocale == locMS){
-        		  magickShoppe(); 
-        	   }else{
-        		   //Don't do anything if the location is not the Magick Shoppe.
-        	   }
+        	   
            }
            
 		   private static void goSouth(Locale loc){
@@ -581,7 +598,7 @@ public class Game {
 			   if(loc.getSouth() != null){
         		   currentLocale = loc.getSouth();
         	   }else {
-			       System.out.println("You cannot got that way.");
+			       System.out.println("You cannot go that way.");
 			   }
 		   }
 			 
@@ -614,6 +631,9 @@ public class Game {
         System.out.println("   t/take");
         System.out.println("   i/inventory");
         System.out.println("   m/map");
+        System.out.println("At the Magick Shoppe:");
+        System.out.println("   b/buy");
+        System.out.println("   l/look");
         System.out.println("Collect the pieces of the device at the different planets.");
     }
 
@@ -654,9 +674,18 @@ public class Game {
 			
 			}else if (Inventory[i] == null) {
 				
-				
+			//Don't print anything if the inventory item is null.	
 			}
-			
+		}
+		for (int i = 0; i < MagickItems.length; ++i){
+			if(MagickItems[i] != null){
+					
+			System.out.println(MagickItems[i]);
+				
+			}else if (Inventory[i] == null) {
+					
+			//Don't print anything if the MagickItems array is null.		
+			}	
 		}
 	}
   
