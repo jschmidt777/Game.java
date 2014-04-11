@@ -59,6 +59,8 @@ public class Game {
         // Get the game started.
         init();
         updateDisplay();
+        
+        
 
         // Game Loop
         while (stillPlaying) {
@@ -83,7 +85,11 @@ public class Game {
 
         // We're done. Thank the player and exit.
         System.out.println("Thank you for playing.");
+        
+        
     }
+    
+    
 
     //
     // Private
@@ -474,7 +480,11 @@ public class Game {
 		   
 		    // Ask player for an item.
 		    Scanner inputReader = new Scanner(System.in);
-		    System.out.print("Welcome to the Magick Shoppe. What item would you like? ");
+		    
+		    
+		    
+		    System.out.print("Welcome to the Magick Shoppe. You may only have one item at a time. What item would you like? ");
+		    
 		    String targetItem = new String();
 		    targetItem = inputReader.nextLine();
 		    System.out.println();
@@ -482,11 +492,15 @@ public class Game {
 		   
 		    li = sequentialSearch(lm1, targetItem);
 		    if (li != null) {
+		    	if( li.getCost() <= score){
 		        System.out.println(li.toString());
-		        System.out.print("That item is listed, buy with your score for " + li.getCost() + "? (or, go south back to Saturn )");
-		       
+		        System.out.print("That item is listed, buy with your score for " + li.getCost() + "? (or, go south back to Saturn ). Press enter to search again.");
+		    	}else{
+		    		System.out.print("You cannot buy that item. Please search again.");
+		    	}
+		    	
 		    }else {
-		     System.out.print("That item is not listed. Please search again using the look command or go south to Saturn.");
+		     System.out.print("That item is not listed. Please press enter to search again.");
 		     
 		    }
 		   
@@ -508,8 +522,6 @@ public class Game {
         }
     
     
-    
-
     private static void navigate() {
      
     	
@@ -539,8 +551,6 @@ public class Game {
         	printMap();
         } else if ( command.equalsIgnoreCase("buy")  || command.equalsIgnoreCase("b") && currentLocale == locations[8]){
         	buyItem();
-        } else if ( command.equalsIgnoreCase("look")  || command.equalsIgnoreCase("l") && currentLocale == locations[8]){
-        	lookForItem();
         }else{
         	System.out.println("Please enter a valid command as listed: ");
         	help();
@@ -559,66 +569,63 @@ public class Game {
             }
     }
     
-          //TODO: Add the final touches for project threeeeeeeeee
     	   
-    	   public static void lookForItem(){
-    		   //Doesn't need to do anything, it will re-search when they enter this command.
-    		   //May need to fix this
-    	   }
-    	   
-     public static void buyItem( ){
-    	//if(MagickItems.length == 0){
-    		if(score >= li.getCost()){
-    			MagickItems[0] = li.getName();
-    			System.out.println("You bought a(n): " + li.getName() + ".");
-    			goSouth(currentLocale);
-    		}else{
-    			System.out.println("You cannot buy this. Please search again using the look command or go south to Saturn. ");
-    		}
-    		
-    	//}else {
-    	//	   System.out.println("You can only have one magick item. ");
-    		   
-    	   }
-     
-    
-           private static void goNorth(Locale loc, Locale locMS){
-        	   
-        	   if(loc.getNorth() != null){
-        		   currentLocale = loc.getNorth();
-        		   
-        	   }else {
-        		   System.out.println("You cannot got that way. ");
-        	   }
-        	   
-           }
-           
-		   private static void goSouth(Locale loc){
-			        	   
-			   if(loc.getSouth() != null){
-        		   currentLocale = loc.getSouth();
-        	   }else {
-			       System.out.println("You cannot go that way.");
-			   }
-		   }
-			 
- 		   private static void goEast(Locale loc){
-				   
-				   if(loc.getEast() != null){
-					   currentLocale = loc.getEast();
-				   }else {
-					   System.out.println("You cannot got that way.");
+    		 public static void buyItem( ){
+	    	//if(MagickItems.length == 0){
+	    		if(score >= li.getCost()){
+	    			MagickItems[0] = li.getName();
+	    			System.out.println("You bought a(n): " + li.getName() + ".");
+	    			goSouth(currentLocale);
+	    		}else{
+	    			System.out.println("You cannot buy this. ");
+	    		}
+	    		
+	    	//}else {
+	    	//	   System.out.println("You can only have one magick item. ");
+	    		   
+	    	   }
+	     
+	    
+	         private static void goNorth(Locale loc, Locale locMS){
+	        	   
+	        	   if(loc.getNorth() != null){
+	        		   currentLocale = loc.getNorth();
+	        		   
+	        	   }else {
+	        		   System.out.println("You cannot got that way. ");
+	        	   }
+	        	   
+	           }
+	           
+			 private static void goSouth(Locale loc){
+				        	   
+				   if(loc.getSouth() != null){
+	        		   currentLocale = loc.getSouth();
+	        		   
+	        	   }else {
+				       System.out.println("You cannot go that way.");
 				   }
-			 	}
- 
- 		   private static void goWest(Locale loc){
-	   
- 				if(loc.getWest() != null){
- 					currentLocale = loc.getWest();
- 				}else {
- 					System.out.println("You cannot got that way.");
- 				}
- 			}
+			   }
+				 
+	 		 private static void goEast(Locale loc){
+					   
+					   if(loc.getEast() != null){
+						   currentLocale = loc.getEast();
+						   
+					   }else {
+						   System.out.println("You cannot got that way.");
+					   }
+				 	}
+	 
+	 		  private static void goWest(Locale loc){
+		   
+	 				if(loc.getWest() != null){
+	 					currentLocale = loc.getWest();
+	 					
+	 				}else {
+	 					System.out.println("You cannot got that way.");
+	 				}
+	 			}
 
     private static void help() {
         System.out.println("The commands are as follows:");

@@ -37,7 +37,8 @@ public class ListItem {
 
 	    @Override
 	    public String toString() {
-	        return " name=" + this.name;
+	        return " name=" + this.name +
+	        		" cost=" + this.cost;
 	    }
 
 	    //
