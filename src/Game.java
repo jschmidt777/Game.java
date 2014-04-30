@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+
 public class Game {
 
     //
@@ -18,17 +19,38 @@ public class Game {
     public static Locale currentLocale = loc0;        // Player starts at Earth. Essentially, this is the head of the linked list.
     public static int[][]  nav;                 // An uninitialized array of type int.
     public static int moves = 0;                // Counter of the player's moves.
-    public static int score = 0;                // Tracker of the player's score.
+    public static int score = 5;                // Tracker of the player's score.
     public static Items[] ItemsArr;				//An array of type Items to hold the possible items.
     public static Items[] Inventory;            //An array of type Items to hold the player's items.
     public static Items[] storeMap;             // Stores the player's map.
     public static String[] MagickItems;		// Stores the player's magick items. Will be printed out with the inventory.
     
     public static void main(String[] args) {
-    	Inventory = new Items[5];
+    	Inventory = new Items[4];
         storeMap = new Items[1];
         MagickItems = new String[1];
-  		  
+       // Make the list manager.
+        ListMan lm1 = new ListMan();
+       // lm1.setName("Magic Items");
+       // lm1.setDesc("These are some of my favorite things.");
+
+        final String fileName = "magicitems.txt";
+        
+        ListItem[] items = new ListItem[lm1.getLength()];
+        //TODO: Figure out why items does not have anything in it, but doesn't show that it is not printing anything.
+        selectionSort(items);
+        
+        readMagicItemsFromFileToList(fileName, lm1);
+	    // Display the list of items.
+	    // System.out.println(lm1.toString());
+
+	    // Declare an array for the items.
+	    
+	    readMagicItemsFromFileToArray(fileName, items);
+	    // Display the array of items.
+	    
+	    
+        
         if (DEBUGGING) {
             // Display the command line args.
             System.out.println("Starting with args:");
@@ -65,24 +87,26 @@ public class Game {
         // Game Loop
         while (stillPlaying) {
         	
-        	if(currentLocale != locations[8]){
+        	if(Inventory[0]==ItemsArr[0] && Inventory[1]==ItemsArr[1] && Inventory[2]==ItemsArr[2] && Inventory[3]==ItemsArr[3] && score>=40  ){
+        		//Win Condition: If the player has all of the pieces of the device, and they have gone to each planet (not necessarily the Magick Shoppe).
+        		//They have to then type in a password to win.
+        		puzzlePassWord();
+        		
+        	}else if(currentLocale != locations[8]){
+	        	
+	        		getCommand();
+		            navigate();
+		            updateDisplay();
+	        	}else{
+	        		
+	        		magickShoppe(items, fileName, lm1);
+	        		getCommand();
+		            navigate();
+		            updateDisplay();
+	        		
+	        	}
         	
-        		getCommand();
-	            navigate();
-	            updateDisplay();
-        	}else{
-        		
-        		magickShoppe();
-        		getCommand();
-	            navigate();
-	            updateDisplay();
-        		
-        	}
         }
-        		 
-        	
-       
-
         // We're done. Thank the player and exit.
         System.out.println("Thank you for playing.");
         
@@ -128,14 +152,6 @@ public class Game {
   
  }  
  */
-
- 
-   // Make the list manager.
-    static ListMan lm1 = new ListMan();
-   // lm1.setName("Magic Items");
-   // lm1.setDesc("These are some of my favorite things.");
-
-    final static String fileName = "magicitems.txt";
     
     //
     // Private
@@ -168,7 +184,42 @@ public class Game {
 
         return retVal;
     }
-
+    
+    private static ListItem binarySearchArray(ListItem[] items,
+            String target) {
+			ListItem retVal = null;
+			System.out.println("Binary Searching for " + target + ".");
+			ListItem currentItem = new ListItem();
+			boolean isFound = false;
+			int counter = 0;
+			int low  = 0;
+			int high = items.length-1; // because 0-based arrays
+			while ( (!isFound) && (low <= high)) {
+			int mid = Math.round((high + low) / 2);
+			currentItem = items[mid];
+				if (currentItem.getName().equalsIgnoreCase(target)) {
+						// We found it!
+						isFound = true;
+						retVal = currentItem;
+				} else {
+				// Keep looking.
+						counter++;
+				if (currentItem.getName().compareToIgnoreCase(target) > 0) {
+				// target is higher in the list than the currentItem (at mid)
+						high = mid - 1;
+				} else {
+				// target is lower in the list than the currentItem (at mid)
+						low = mid + 1;
+				}
+			}
+		}
+				if (isFound) {
+					System.out.println("Found " + target + " after " + counter + " comparisons.");
+				} else {
+					System.out.println("Could not find " + target + " in " + counter + " comparisons.");
+				}
+				return retVal;
+    }
 
     private static void readMagicItemsFromFileToList(String fileName,
                                                      ListMan lm) {
@@ -230,7 +281,7 @@ public class Game {
             int indexOfTarget = pass;
             int indexOfSmallest = indexOfTarget;
             for (int j = indexOfTarget+1; j < items.length; j++) {
-            	//The problem is here. Something with this if statement makes the game crash.
+            
                 if (items[j].getName().compareToIgnoreCase(items[indexOfSmallest].getName()) < 0) {
                     indexOfSmallest = j;
                 }else{
@@ -244,30 +295,50 @@ public class Game {
     }
    
    
-   
+    public static void puzzlePassWord(){
+    	String passWord = new String();
+    	passWord= "pace";
+    	System.out.println("Type in the password to win the game");
+    	getCommand();
+    	
+    	if(command.equalsIgnoreCase(passWord)){
+    		
+    		System.out.println("You Win! You've collected all the pieces of the device, fused them together with the password, and saved the Solar System with the completed device!");
+    	    quit();
+    		//TODO: Call, but first implement the necessary code, a function to have the player see their play through with the stack. Quit will then have to be called in that method.
+    	}else if(command.equalsIgnoreCase("i") || command.equalsIgnoreCase("inventory") ){
+    		printInventory();
+    	}else{
+    		
+    		System.out.println("That is incorrect. Try again. (Hint: The letters are on the pieces. Look at your inventory.) ");
+    	}
+	   
+   }
  
     
 	private static void init() {
         // Initialize any uninitialized globals.
         command = new String();
         stillPlaying = true; 
-        System.out.println("Solar Sysdoom V3 (Java Edition)");  
+        System.out.println("Solar Sysdoom V3 (Java Edition)");
+        System.out.println("Go to each planet and collect all of the pieces of the device to save the Solar System.");
+        
         
         Items item0 = new Items(0);
 	  		item0.setName(" Piece One.");
-	  		item0.setDesc(" This is the first piece of the device.");
+	  		item0.setDesc(" This is the first piece of the device. The letter 'A' is printed on it.");
 	  		
 	  	Items item1 = new Items(1);
   			item1.setName(" Piece Two.");
-  			item1.setDesc(" This is the second piece of the device.");
+  			item1.setDesc(" This is the second piece of the device. The letter 'E' is printed on it.");
   		
   		Items item2 = new Items(2);
 	  		item2.setName(" Piece Three.");
-	  		item2.setDesc(" This is the third piece of the device.");
+	  		item2.setDesc(" This is the third piece of the device. The letter 'P' is printed on it.");
 	  		
 	  	Items item3 = new Items(3);
 	  		item3.setName(" Piece Four.");
-	  		item3.setDesc(" This is the fourth piece of the device."); 
+	  		item3.setDesc(" This is the fourth piece of the device. The letter 'C' is printed on it."); 
   		
 	  	Items item4 = new Items(4);
   			item4.setName("");
@@ -304,10 +375,6 @@ public class Game {
                     "                     V                                                                " + "\n"+
                     "                    Uranus "    );
   			
-  			
-  		
-  			 
-  			
    ItemsArr = new Items[7];
    			ItemsArr[0]= item0;
    			ItemsArr[1]= item1;
@@ -323,6 +390,9 @@ public class Game {
 	        loc0.setDesc("You are on the surface of your home planet.");
 	        loc0.setItem(item5);
 	        loc0.setNearestPlanet("Mercury(north).");
+	        loc0.setHasVisited(true);
+	        //Add Earth to the stack 
+	        myStack.push(loc0.getName());
 	        
          Space loc1 = new Space(1);   //Locale (1)
 	        loc1.setName("Mercury");
@@ -438,26 +508,14 @@ public class Game {
             for (int i = 0; i < locations.length; ++i) {
                 System.out.println(i + ":" + locations[i].toString());
             }
-        }
-       
-        
-       
-        
+        } 
     }
 		
 	 //Instantiate the list item from the list of Magick Items.
 	 static ListItem li = new ListItem();
 	
-	 public static void magickShoppe(){
+	 private static void magickShoppe(ListItem[] items, String fileName, ListMan lm1){
 		    
-		    readMagicItemsFromFileToList(fileName, lm1);
-		    // Display the list of items.
-		    // System.out.println(lm1.toString());
-
-		    // Declare an array for the items.
-		    ListItem[] items = new ListItem[lm1.getLength()];
-		    readMagicItemsFromFileToArray(fileName, items);
-		    // Display the array of items.
 		    /*
 		    System.out.println("Items in the array BEFORE sorting:");
 		    for (int i = 0; i < items.length; i++) {
@@ -467,45 +525,41 @@ public class Game {
 		    }
 				*/
 		    
-		    
-		   
-		    
 		    System.out.println("These are the Magic Items:");
 		    for (int i = 0; i < items.length; i++) {
 		        if (items[i] != null) {
 		            System.out.println(items[i].toString());
+		        }else{
+		        	System.out.println("I'm just not going to print for some reason");
 		        }
 		    }
 		    
 		   
+		   
 		    // Ask player for an item.
 		    Scanner inputReader = new Scanner(System.in);
-		    
-		    
-		    
 		    System.out.print("Welcome to the Magick Shoppe. You may only have one item at a time. What item would you like? ");
 		    
 		    String targetItem = new String();
 		    targetItem = inputReader.nextLine();
 		    System.out.println();
-
+		
 		   
-		    li = sequentialSearch(lm1, targetItem);
+		    li = sequentialSearch( lm1, targetItem);
 		    if (li != null) {
 		    	if( li.getCost() <= score){
 		        System.out.println(li.toString());
 		        System.out.print("That item is listed, buy with your score for " + li.getCost() + "? (or, go south back to Saturn ). Press enter to search again.");
 		    	}else{
-		    		System.out.print("You cannot buy that item. Please search again.");
+		    		System.out.print("You cannot buy that item. Please search again (enter) or go south to Saturn.");
 		    	}
 		    	
 		    }else {
-		     System.out.print("That item is not listed. Please press enter to search again.");
+		     System.out.print("That item is not listed. Please press enter to search again or go south to Saturn.");
 		     
 		    }
 		   
 	 }	
-	 
 	 
 
     private static void updateDisplay() {
@@ -521,6 +575,8 @@ public class Game {
        
         }
     
+    static BackwardLocationsStack myStack = new BackwardLocationsStack();
+    //Create the stack for the locations; Backwards 
     
     private static void navigate() {
      
@@ -552,30 +608,42 @@ public class Game {
         } else if ( command.equalsIgnoreCase("buy")  || command.equalsIgnoreCase("b") && currentLocale == locations[8]){
         	buyItem();
         }else{
+        	if(currentLocale != locations[8]){
         	System.out.println("Please enter a valid command as listed: ");
         	help();
+        	}
         };
+        	
             if (currentLocale.getHasVisited() != true) {
                 
                 moves = moves + 1;
                 score = score + 5;
-                currentLocale.setHasVisited(true); 
+                currentLocale.setHasVisited(true);
+                myStack.push(currentLocale.getName());
                 
-            }else if (currentLocale.getHasVisited() != false ){
-            	
-                moves = moves + 1;
-                score = score;
+            }else if (currentLocale.getHasVisited() != false){
+            	//Unless you go from one location to another, it does not count as a 'move' 
+            	if(command.equalsIgnoreCase("north") || command.equalsIgnoreCase("n") || command.equalsIgnoreCase("south") || command.equalsIgnoreCase("s") || command.equalsIgnoreCase("east") || command.equalsIgnoreCase("e") ||command.equalsIgnoreCase("west")  || command.equalsIgnoreCase("w")){
+            		moves = moves + 1;
+                    score = score;
+                    myStack.push(currentLocale.getName());
             
+            	}else{
+            		moves = moves;
+            		score = score;
+            	}
             }
     }
     
     	   
-    		 public static void buyItem( ){
+    	 private static void buyItem( ){
 	    	//if(MagickItems.length == 0){
 	    		if(score >= li.getCost()){
 	    			MagickItems[0] = li.getName();
 	    			System.out.println("You bought a(n): " + li.getName() + ".");
-	    			goSouth(currentLocale);
+                    goSouth(currentLocale);
+                    myStack.push(currentLocale.getName());
+                    
 	    		}else{
 	    			System.out.println("You cannot buy this. ");
 	    		}
@@ -592,7 +660,7 @@ public class Game {
 	        		   currentLocale = loc.getNorth();
 	        		   
 	        	   }else {
-	        		   System.out.println("You cannot got that way. ");
+	        		   System.out.println("You cannot go that way. ");
 	        	   }
 	        	   
 	           }
@@ -613,7 +681,7 @@ public class Game {
 						   currentLocale = loc.getEast();
 						   
 					   }else {
-						   System.out.println("You cannot got that way.");
+						   System.out.println("You cannot go that way.");
 					   }
 				 	}
 	 
@@ -623,7 +691,7 @@ public class Game {
 	 					currentLocale = loc.getWest();
 	 					
 	 				}else {
-	 					System.out.println("You cannot got that way.");
+	 					System.out.println("You cannot go that way.");
 	 				}
 	 			}
 
@@ -640,21 +708,52 @@ public class Game {
         System.out.println("   m/map");
         System.out.println("At the Magick Shoppe:");
         System.out.println("   b/buy");
-        System.out.println("   l/look");
-        System.out.println("Collect the pieces of the device at the different planets.");
+        System.out.println("Go to each planet and collect all of the pieces of the device to save the Solar System.");
     }
 
     private static void quit() {
-        stillPlaying = false;
+    	stillPlaying = false;
+    	askForwardorBackward();
     }
     
     
+    private static void askForwardorBackward(){
+    	System.out.println("Do you want to see your moves forwards or backwards?");
+    	getCommand();
+    	if(command.equalsIgnoreCase("forward")  || command.equalsIgnoreCase("f")){
+    		//TODO: Add queue here
+    		
+    	}else if (command.equalsIgnoreCase("backward")  || command.equalsIgnoreCase("b")){
+    		backwardprintStack();
+    		
+    	}else{
+    		
+    		System.out.println("Welp, you're going to see it forward");
+    		//TODO: Add queue here as well
+    	}
+    	//This function should be in quit 
+    	
+    }
     
-    public static void tookItem(Items item){
+	private static void backwardprintStack() {
+		
+		for(int i = 0; i <= moves + 1 ; i++){
+			try {
+	            System.out.println(myStack.pop());
+	            
+	        } catch (Exception ex) {
+	            System.out.println("Caught exception: " + ex.getMessage());
+	        }
+			//Need exception just in case, but having it print after each stack item is annoying
+	        //System.out.println(myStack.isEmpty());
+		}
+	}
+	
+	private static void tookItem(Items item){
     	System.out.println("You took: " + item.getName());
     }
      
-    public static void printMap(){
+    private static void printMap(){
     	
     	for (int i = 0; i < storeMap.length; ++i){
 			if(storeMap[i] != null){
@@ -671,7 +770,7 @@ public class Game {
     	 
     }
     
-    public static void printInventory(){
+    private static void printInventory(){
 		System.out.println("Here is your inventory: ");
 		
 		for (int i = 0; i < Inventory.length; ++i){
@@ -697,7 +796,7 @@ public class Game {
 	}
   
     
-    public static void take(){
+    private static void take(){
     	Locale checkTake = currentLocale;
     	
     	if(checkTake == locations[0] && locations[0].getHasItem() != false){
