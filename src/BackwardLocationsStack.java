@@ -23,7 +23,7 @@ public class BackwardLocationsStack {
     }
 
     public String pop() {
-        String retVal = "Your Moves Backwards";
+        String retVal = "(Your Moves Backwards)";
         // Check for stack underflow.
         if (topPtr < CAPACITY) {
             retVal = getArr()[topPtr];

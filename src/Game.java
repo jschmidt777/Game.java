@@ -391,8 +391,14 @@ public class Game {
 	        loc0.setItem(item5);
 	        loc0.setNearestPlanet("Mercury(north).");
 	        loc0.setHasVisited(true);
-	        //Add Earth to the stack 
+	        //Add Earth to the stack and the queue 
 	        myStack.push(loc0.getName());
+	        try {
+				myQueue.enqueue(loc0.getName());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	        
          Space loc1 = new Space(1);   //Locale (1)
 	        loc1.setName("Mercury");
@@ -577,6 +583,8 @@ public class Game {
     
     static BackwardLocationsStack myStack = new BackwardLocationsStack();
     //Create the stack for the locations; Backwards 
+    static ForwardLocationsQueue myQueue = new ForwardLocationsQueue();
+    //Create the queue for the locations; Forwards
     
     private static void navigate() {
      
@@ -620,6 +628,12 @@ public class Game {
                 score = score + 5;
                 currentLocale.setHasVisited(true);
                 myStack.push(currentLocale.getName());
+                try {
+					myQueue.enqueue(currentLocale.getName());
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
                 
             }else if (currentLocale.getHasVisited() != false){
             	//Unless you go from one location to another, it does not count as a 'move' 
@@ -627,7 +641,12 @@ public class Game {
             		moves = moves + 1;
                     score = score;
                     myStack.push(currentLocale.getName());
-            
+                    try {
+						myQueue.enqueue(currentLocale.getName());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
             	}else{
             		moves = moves;
             		score = score;
@@ -637,21 +656,25 @@ public class Game {
     
     	   
     	 private static void buyItem( ){
-	    	//if(MagickItems.length == 0){
+	    	
 	    		if(score >= li.getCost()){
 	    			MagickItems[0] = li.getName();
 	    			System.out.println("You bought a(n): " + li.getName() + ".");
                     goSouth(currentLocale);
                     myStack.push(currentLocale.getName());
                     
+                    try {
+						myQueue.enqueue(currentLocale.getName());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+                    
 	    		}else{
 	    			System.out.println("You cannot buy this. ");
-	    		}
-	    		
-	    	//}else {
-	    	//	   System.out.println("You can only have one magick item. ");
-	    		   
-	    	   }
+	    		}	
+	    	
+	   	   }
 	     
 	    
 	         private static void goNorth(Locale loc, Locale locMS){
@@ -721,7 +744,7 @@ public class Game {
     	System.out.println("Do you want to see your moves forwards or backwards?");
     	getCommand();
     	if(command.equalsIgnoreCase("forward")  || command.equalsIgnoreCase("f")){
-    		//TODO: Add queue here
+    		forwardprintQueue();
     		
     	}else if (command.equalsIgnoreCase("backward")  || command.equalsIgnoreCase("b")){
     		backwardprintStack();
@@ -729,7 +752,7 @@ public class Game {
     	}else{
     		
     		System.out.println("Welp, you're going to see it forward");
-    		//TODO: Add queue here as well
+    		forwardprintQueue();
     	}
     	//This function should be in quit 
     	
@@ -740,6 +763,20 @@ public class Game {
 		for(int i = 0; i <= moves + 1 ; i++){
 			try {
 	            System.out.println(myStack.pop());
+	            
+	        } catch (Exception ex) {
+	            System.out.println("Caught exception: " + ex.getMessage());
+	        }
+			//Need exception just in case, but having it print after each stack item is annoying
+	        //System.out.println(myStack.isEmpty());
+		}
+	}
+	
+	private static void forwardprintQueue() {
+		
+		for(int i = 0; i <= moves + 1 ; i++){
+			try {
+	            System.out.println(myQueue.dequeue());
 	            
 	        } catch (Exception ex) {
 	            System.out.println("Caught exception: " + ex.getMessage());
