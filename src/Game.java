@@ -35,20 +35,14 @@ public class Game {
        // lm1.setDesc("These are some of my favorite things.");
 
         final String fileName = "magicitems.txt";
-        
-        ListItem[] items = new ListItem[lm1.getLength()];
-        //TODO: Figure out why items does not have anything in it, but doesn't show that it is not printing anything.
-        selectionSort(items);
-        
         readMagicItemsFromFileToList(fileName, lm1);
-	    // Display the list of items.
-	    // System.out.println(lm1.toString());
 
 	    // Declare an array for the items.
-	    
+        ListItem[] items = new ListItem[lm1.getLength()];
 	    readMagicItemsFromFileToArray(fileName, items);
 	    // Display the array of items.
 	    
+	    selectionSort(items);
 	    
         
         if (DEBUGGING) {
@@ -59,25 +53,7 @@ public class Game {
             }
         }
        
-        /*
-        if (args.length > 0) {
-            try {
-                int startLocation = Integer.parseInt(args[0]);
-                // Check that the passed-in value for startLocation is within the range of actual locations.
-                if ( startLocation >= 0 && startLocation <= MAX_LOCALES) {
-                    currentLocale = startLocation;
-                } else {
-                    System.out.println("WARNING: passed-in starting location (" + args[0] + ") is out of range.");
-                }
-            } catch(NumberFormatException ex) {
-                System.out.println("WARNING: Invalid command line arg: " + args[0]);
-                if (DEBUGGING) {
-                    System.out.println(ex.toString());
-                }
-            }
-        }
-        */
-
+       
         // Get the game started.
         init();
         updateDisplay();
@@ -101,7 +77,8 @@ public class Game {
 	        		
 	        		magickShoppe(items, fileName, lm1);
 	        		getCommand();
-		            navigate();
+
+	        		navigate();
 		            updateDisplay();
 	        		
 	        	}
@@ -113,8 +90,6 @@ public class Game {
         
     }
     
-    
-
     //
     // Private
     //
@@ -156,34 +131,7 @@ public class Game {
     //
     // Private
     //
-    private static ListItem sequentialSearch(ListMan lm,
-                                             String target) {
-        ListItem retVal = null;
-        System.out.println("Searching for " + target + ".");
-        int counter = 0;
-        ListItem currentItem = new ListItem();
-        currentItem = lm.getHead();
-        boolean isFound = false;
-        while ( (!isFound) && (currentItem != null) ) {
-            counter = counter +1;
-            if (currentItem.getName().equalsIgnoreCase(target)) {
-                // We found it!
-                isFound = true;
-                retVal = currentItem;
-            } else {
-                // Keep looking.
-                currentItem = currentItem.getNext();
-            }
-        }
-        if (isFound) {
-            System.out.println("Found " + target + " after " + counter + " comparisons.");
-            return  currentItem;
-        } else {
-            System.out.println("Could not find " + target + " in " + counter + " comparisons.");
-        }
-
-        return retVal;
-    }
+   
     
     private static ListItem binarySearchArray(ListItem[] items,
             String target) {
@@ -295,7 +243,7 @@ public class Game {
     }
    
    
-    public static void puzzlePassWord(){
+    private static void puzzlePassWord(){
     	String passWord = new String();
     	passWord= "pace";
     	System.out.println("Type in the password to win the game");
@@ -305,7 +253,7 @@ public class Game {
     		
     		System.out.println("You Win! You've collected all the pieces of the device, fused them together with the password, and saved the Solar System with the completed device!");
     	    quit();
-    		//TODO: Call, but first implement the necessary code, a function to have the player see their play through with the stack. Quit will then have to be called in that method.
+    		
     	}else if(command.equalsIgnoreCase("i") || command.equalsIgnoreCase("inventory") ){
     		printInventory();
     	}else{
@@ -396,7 +344,7 @@ public class Game {
 	        try {
 				myQueue.enqueue(loc0.getName());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+			
 				e.printStackTrace();
 			}
 	        
@@ -540,18 +488,15 @@ public class Game {
 		        }
 		    }
 		    
-		   
-		   
 		    // Ask player for an item.
 		    Scanner inputReader = new Scanner(System.in);
-		    System.out.print("Welcome to the Magick Shoppe. You may only have one item at a time. What item would you like? ");
-		    
+		    System.out.print("Welcome to the Magick Shoppe. You may only have one item at a time. What item would you like? (score/gold: " + score + " )");        
 		    String targetItem = new String();
 		    targetItem = inputReader.nextLine();
 		    System.out.println();
 		
 		   
-		    li = sequentialSearch( lm1, targetItem);
+		    li = binarySearchArray( items, targetItem);
 		    if (li != null) {
 		    	if( li.getCost() <= score){
 		        System.out.println(li.toString());
@@ -631,7 +576,7 @@ public class Game {
                 try {
 					myQueue.enqueue(currentLocale.getName());
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
+				
 					e.printStackTrace();
 				}
                 
@@ -666,7 +611,7 @@ public class Game {
                     try {
 						myQueue.enqueue(currentLocale.getName());
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					}
                     
@@ -741,7 +686,7 @@ public class Game {
     
     
     private static void askForwardorBackward(){
-    	System.out.println("Do you want to see your moves forwards or backwards?");
+    	System.out.println("Do you want to see your moves forwards (f) or backwards (b)?");
     	getCommand();
     	if(command.equalsIgnoreCase("forward")  || command.equalsIgnoreCase("f")){
     		forwardprintQueue();
