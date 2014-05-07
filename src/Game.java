@@ -17,7 +17,6 @@ public class Game {
     public static Locale[] locations;           // An uninitialized array of type Locale. See init() for initialization.
     static Ground loc0 = new Ground(0);  				//Locale (0) and head of the list
     public static Locale currentLocale = loc0;        // Player starts at Earth. Essentially, this is the head of the linked list.
-    public static int[][]  nav;                 // An uninitialized array of type int.
     public static int moves = 0;                // Counter of the player's moves.
     public static int score = 5;                // Tracker of the player's score.
     public static Items[] ItemsArr;				//An array of type Items to hold the possible items.
@@ -245,9 +244,10 @@ public class Game {
    
     private static void puzzlePassWord(){
     	String passWord = new String();
-    	passWord= "pace";
+    	passWord= "space";
     	System.out.println("Type in the password to win the game");
     	getCommand();
+    	
     	
     	if(command.equalsIgnoreCase(passWord)){
     		
@@ -256,11 +256,11 @@ public class Game {
     		
     	}else if(command.equalsIgnoreCase("i") || command.equalsIgnoreCase("inventory") ){
     		printInventory();
-    	}else{
+    	}else {
     		
-    		System.out.println("That is incorrect. Try again. (Hint: The letters are on the pieces. Look at your inventory.) ");
-    	}
-	   
+    		System.out.println("That is incorrect. Try again. (Hint: Some of the letters are on the pieces. Look at your inventory.) ");
+    	}	
+	 
    }
  
     
@@ -294,7 +294,7 @@ public class Game {
   		
   	        
   		Items item5 = new Items(5);
-  			item5.setName(" Map (this is an item). ");
+  			item5.setName(" Map (this is an item)." +"\n" );
   			item5.setDesc("This is the map: " + "\n" + 
   				    "                  Neptune " + "\n"+
                     "                     ^    " + "\n"+
@@ -321,7 +321,8 @@ public class Game {
                     "                     |                                                                " + "\n"+
                     "                     |                                                                " + "\n"+
                     "                     V                                                                " + "\n"+
-                    "                    Uranus "    );
+                    "                    Uranus "  +"\n" +
+                    " The 'S' in Sun is underlined. " );
   			
    ItemsArr = new Items[7];
    			ItemsArr[0]= item0;
@@ -589,7 +590,7 @@ public class Game {
                     try {
 						myQueue.enqueue(currentLocale.getName());
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
+						
 						e.printStackTrace();
 					}
             	}else{
